@@ -11,13 +11,13 @@
 <body>
 <div class="page-wrap">
 
-  <a class="back-link" href="index.html">‹ Back to Dashboard</a>
+  <a class="back-link" id="backLink" href="index.html">‹ Back to Dashboard</a>
 
   <div class="page-title-row">
     <div class="g-icon best">🏆</div>
     <div>
-      <h1>Recent Best (Aggregate)</h1>
-      <p>Across all games this week</p>
+      <h1 id="pageTitleName">Recent Best (Aggregate)</h1>
+      <p id="pageTitleMeta">Across all games this week</p>
     </div>
   </div>
 
@@ -44,5 +44,15 @@
   </div>
 
 </div>
+
+<script src="patients.js"></script>
+<script src="analysis-common.js"></script>
+<script>
+  nbInitAnalysisPage({
+    gameKey: 'best',
+    fallbackName: 'Recent Best (Aggregate)',
+    fallbackMeta: 'Across all games this week'
+  });
+</script>
 </body>
 </html>

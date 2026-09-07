@@ -80,6 +80,36 @@
     color:var(--ink-soft);
     font-weight:600;
   }
+  .patient-switch{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:999px;
+    padding:6px 8px 6px 16px;
+  }
+  .patient-switch-label{
+    font-size:12px;
+    font-weight:700;
+    color:var(--ink-soft);
+    white-space:nowrap;
+  }
+  .patient-select{
+    border:1px solid var(--line);
+    border-radius:999px;
+    background:var(--sage-light);
+    color:var(--forest-dark);
+    font-family:'Nunito Sans',serif;
+    font-weight:700;
+    font-size:13.5px;
+    padding:7px 14px;
+    outline:none;
+    cursor:pointer;
+    -webkit-appearance:none;
+    appearance:none;
+  }
+  .patient-select:focus{ border-color:var(--sage); }
   .nav-links{
     display:flex;
     align-items:center;
@@ -221,6 +251,41 @@
   }
   .settings-select:focus{ border-color:var(--sage); }
 
+  .live-location-btn{
+    width:100%;
+    margin-top:10px;
+    border:1px solid var(--forest);
+    background:var(--sage-light);
+    color:var(--forest-dark);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:13px;
+    font-weight:700;
+    font-family:'Nunito Sans',serif;
+    cursor:pointer;
+    transition:background .15s ease;
+  }
+  .live-location-btn:hover{ background:#D9EDE2; }
+  .live-location-btn:disabled{ opacity:0.6; cursor:default; }
+  .location-status{
+    margin-top:8px;
+    font-size:12px;
+    color:var(--ink-soft);
+    min-height:14px;
+  }
+  .location-status.error{ color:#B23A3A; }
+
+  .live-dot{
+    display:inline-flex;
+    align-items:center;
+    gap:3px;
+    color:var(--sage);
+    font-size:9.5px;
+    font-weight:800;
+    margin-left:6px;
+    letter-spacing:0.02em;
+  }
+
   /* ---------- Greeting banner ---------- */
   .banner{
     background:var(--card);
@@ -238,6 +303,20 @@
     border-radius:50%;
     object-fit:cover;
     flex-shrink:0;
+    border:2px solid var(--sage-light);
+  }
+  .status-avatar{
+    width:52px;height:52px;border-radius:50%;object-fit:cover;
+  }
+  .photo-placeholder{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:var(--sage-light);
+    color:var(--forest);
+    font-weight:800;
+    font-family:'Nunito Sans',serif;
+    font-size:22px;
     border:2px solid var(--sage-light);
   }
   .banner-body{ flex:1; min-width:240px; }
@@ -633,6 +712,8 @@
   /* ---------- Small phones (e.g. 325px wide) ---------- */
   @media (max-width: 480px){
     .settings-panel{ width:min(84vw, 280px); right:-10px; }
+    .patient-switch{ width:100%; justify-content:space-between; padding:6px 6px 6px 12px; }
+    .patient-select{ font-size:12.5px; padding:6px 10px; }
     body{ padding:12px; overflow-x:hidden; }
     .wrap{ gap:14px; }
 

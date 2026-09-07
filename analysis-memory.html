@@ -11,13 +11,13 @@
 <body>
 <div class="page-wrap">
 
-  <a class="back-link" href="index.html">‹ Back to Dashboard</a>
+  <a class="back-link" id="backLink" href="index.html">‹ Back to Dashboard</a>
 
   <div class="page-title-row">
     <div class="g-icon memory">🧩</div>
     <div>
-      <h1>Memory Match</h1>
-      <p>Cognitive · played this morning</p>
+      <h1 id="pageTitleName">Memory Match</h1>
+      <p id="pageTitleMeta">Cognitive · played this morning</p>
     </div>
   </div>
 
@@ -47,5 +47,15 @@
   </div>
 
 </div>
+
+<script src="patients.js"></script>
+<script src="analysis-common.js"></script>
+<script>
+  nbInitAnalysisPage({
+    gameKey: 'memory',
+    fallbackName: 'Memory Match',
+    fallbackMeta: 'Cognitive · played this morning'
+  });
+</script>
 </body>
 </html>
