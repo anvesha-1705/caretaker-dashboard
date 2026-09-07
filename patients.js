@@ -1,149 +1,130 @@
 // ============================================================
-// NeuroBloom — Patient data
-// Add a new person by copying one of these objects and giving
-// it a unique "id". Everything else is optional but recommended.
+// NeuroBloom dashboard — patient data store
+// Defines: nbGetPatients, nbGetPatient, nbGetActivePatientId,
+// nbSetActivePatientId, nbGetCareLog, nbAddCareLogEntry
+// Replace the placeholder values below with real patient data.
 // ============================================================
 
 const NB_PATIENTS = [
   {
     id: 'arundhati',
+    fullName: 'Arundhati',
     name: 'Arundhati',
-    fullName: 'Arundhati Sharma',
     avatarInitial: 'A',
     location: 'Guwahati, Assam',
-    lastActive: '5 min ago',
-    mood: 'Calmer',
-    activityLevel: 'Normal',
-    focusLevel: 'Improved',
-    alert: true,
-    totalPlayTime: '45 min',
-    tags: ['focus', 'language', 'creative'],
-    games: {
-      memory: { meta: 'Cognitive · played this morning' },
-      best:   { meta: 'Across all games this week' },
-      logic:  { meta: 'Problem-solving · yesterday' }
-    },
-    cognitiveDone: 3, cognitiveTotal: 4,
-    physicalDone: 1, physicalTotal: 1,
-    exercisePercent: 75,
-    remainingText: 'Remaining: Language exercise, Short walk',
-    schedule: [
-      { icon: '🕐', time: '11:30 AM', desc: 'Medicine time – Post-Lunch' },
-      { icon: '💧', time: '2:00 PM',  desc: 'Hydration check' },
-      { icon: '📹', time: '4:00 PM',  desc: 'Weekly video call with Priya' },
-      { icon: '🔔', time: '5:30 PM',  desc: 'Evening walk' },
-      { icon: '🚶', time: '5:30 PM',  desc: 'Evening walk' }
-    ],
-    note: {
-      initial: 'D', name: 'Dr. Sharma', org: 'AIIMS Guwahati', time: '10:00 AM',
-      text: 'Wonderful focus on the Memory Match game today, Arundhati. Keep up this regular morning play!'
-    },
-    careLog: [
-      '11:35 AM: (Caregiver log) Medicine administered.<br>Ate most of breakfast.'
-    ]
-  },
-  {
-    id: 'ramesh',
-    name: 'Ramesh',
-    fullName: 'Ramesh Verma',
-    avatarInitial: 'R',
-    location: 'Jhansi, Uttar Pradesh',
-    lastActive: '20 min ago',
+    lastActive: '9:42 AM',
     mood: 'Cheerful',
-    activityLevel: 'Low',
-    focusLevel: 'Steady',
-    alert: false,
-    totalPlayTime: '30 min',
-    tags: ['memory', 'logic'],
+    activityLevel: 'Moderate',
+    focusLevel: 'Good',
+    alert: true,
+    cognitiveDone: 3,
+    cognitiveTotal: 4,
+    exercisePercent: 75,
+    remainingText: '1 cognitive exercise left today',
+    totalPlayTime: '32 min',
+    tags: ['Memory', 'Focus', 'Routine'],
     games: {
-      memory: { meta: 'Cognitive · played yesterday' },
-      best:   { meta: 'Across all games this week' },
-      logic:  { meta: 'Problem-solving · this morning' }
+      memory: { meta: '5 of 6 remembered · 2 min ago' },
+      best:   { meta: 'Best streak: 4 days' },
+      logic:  { meta: '3 of 5 correct · Yesterday' }
     },
-    cognitiveDone: 2, cognitiveTotal: 4,
-    physicalDone: 0, physicalTotal: 1,
-    exercisePercent: 40,
-    remainingText: 'Remaining: Creative exercise, Focus game, Short walk',
     schedule: [
-      { icon: '🕐', time: '9:00 AM',  desc: 'Medicine time – Post-Breakfast' },
-      { icon: '💧', time: '1:00 PM',  desc: 'Hydration check' },
-      { icon: '🔔', time: '6:00 PM',  desc: 'Evening walk' }
-    ],
-    note: {
-      initial: 'S', name: 'Dr. Singh', org: 'City Hospital Jhansi', time: '9:30 AM',
-      text: 'Ramesh is responding well to the new routine. Continue with light morning walks.'
-    },
-    careLog: [
-      '9:05 AM: (Caregiver log) Medicine administered.<br>Skipped breakfast, had tea only.'
+      { icon: '💊', time: '8:00 AM', desc: 'Take Medicine' },
+      { icon: '🍲', time: '9:00 AM', desc: 'Breakfast' },
+      { icon: '🚶', time: '10:00 AM', desc: 'Walk in Garden' },
+      { icon: '🍛', time: '1:00 PM', desc: 'Lunch' },
+      { icon: '💊', time: '8:00 PM', desc: 'Take Medicine' }
     ]
   },
   {
-    id: 'kamla',
-    name: 'Kamla',
-    fullName: 'Kamla Devi',
+    id: 'kamala-devi',
+    fullName: 'Kamala Devi',
+    name: 'Kamala Devi',
     avatarInitial: 'K',
-    location: 'Delhi NCR',
-    lastActive: '1 hour ago',
-    mood: 'Quiet',
-    activityLevel: 'Normal',
-    focusLevel: 'Needs attention',
-    alert: true,
-    totalPlayTime: '15 min',
-    tags: ['language'],
+    location: 'Jhansi, Uttar Pradesh',
+    lastActive: '7:58 AM',
+    mood: 'Calm',
+    activityLevel: 'Low',
+    focusLevel: 'Fair',
+    alert: false,
+    cognitiveDone: 2,
+    cognitiveTotal: 4,
+    exercisePercent: 40,
+    remainingText: '2 cognitive exercises left today',
+    totalPlayTime: '18 min',
+    tags: ['Music', 'Sequence'],
     games: {
-      memory: { meta: 'Cognitive · not played today' },
-      best:   { meta: 'Across all games this week' },
-      logic:  { meta: 'Problem-solving · 2 days ago' }
+      memory: { meta: '4 of 6 remembered · 1 hr ago' },
+      best:   { meta: 'Best streak: 2 days' },
+      logic:  { meta: '2 of 5 correct · Today' }
     },
-    cognitiveDone: 1, cognitiveTotal: 4,
-    physicalDone: 0, physicalTotal: 1,
-    exercisePercent: 20,
-    remainingText: 'Remaining: Memory, Focus, Logic exercises, Short walk',
     schedule: [
-      { icon: '🕐', time: '10:00 AM', desc: 'Medicine time – Post-Breakfast' },
-      { icon: '📹', time: '3:00 PM',  desc: 'Weekly video call with son' }
-    ],
-    note: {
-      initial: 'M', name: 'Dr. Mehta', org: 'Apollo Delhi', time: '11:00 AM',
-      text: 'Kamla seems low on energy today — consider encouraging a short game session.'
+      { icon: '💊', time: '8:00 AM', desc: 'Take Medicine' },
+      { icon: '🍲', time: '9:00 AM', desc: 'Breakfast' },
+      { icon: '🎵', time: '11:00 AM', desc: 'Music Memory Session' },
+      { icon: '🍛', time: '1:00 PM', desc: 'Lunch' }
+    ]
+  },
+  {
+    id: 'rakesh-verma',
+    fullName: 'Rakesh Verma',
+    name: 'Rakesh Verma',
+    avatarInitial: 'R',
+    location: 'Delhi NCR',
+    lastActive: '8:20 AM',
+    mood: 'Content',
+    activityLevel: 'Moderate',
+    focusLevel: 'Good',
+    alert: false,
+    cognitiveDone: 4,
+    cognitiveTotal: 4,
+    exercisePercent: 100,
+    remainingText: 'All exercises complete for today',
+    totalPlayTime: '41 min',
+    tags: ['Logic', 'Puzzle'],
+    games: {
+      memory: { meta: '6 of 6 remembered · 30 min ago' },
+      best:   { meta: 'Best streak: 6 days' },
+      logic:  { meta: '5 of 5 correct · Today' }
     },
-    careLog: [
-      '10:10 AM: (Caregiver log) Medicine administered.<br>Mood appears low today.'
+    schedule: [
+      { icon: '💊', time: '7:30 AM', desc: 'Take Medicine' },
+      { icon: '🍲', time: '8:30 AM', desc: 'Breakfast' },
+      { icon: '🧩', time: '10:30 AM', desc: 'Puzzle Session' },
+      { icon: '🍛', time: '1:00 PM', desc: 'Lunch' },
+      { icon: '🚶', time: '5:00 PM', desc: 'Evening Walk' }
     ]
   }
 ];
 
 const NB_ACTIVE_KEY = 'nb_active_patient_id';
-const NB_CARELOG_KEY_PREFIX = 'nb_carelog_';
+const NB_CARELOG_KEY_PREFIX = 'nb_care_log_';
 
-function nbGetPatients() {
+function nbGetPatients(){
   return NB_PATIENTS;
 }
 
-function nbGetPatient(id) {
+function nbGetPatient(id){
   return NB_PATIENTS.find(p => p.id === id) || NB_PATIENTS[0];
 }
 
-function nbGetActivePatientId() {
-  const stored = localStorage.getItem(NB_ACTIVE_KEY);
-  if (stored && NB_PATIENTS.some(p => p.id === stored)) return stored;
-  return NB_PATIENTS[0].id;
+function nbGetActivePatientId(){
+  return localStorage.getItem(NB_ACTIVE_KEY) || NB_PATIENTS[0].id;
 }
 
-function nbSetActivePatientId(id) {
+function nbSetActivePatientId(id){
   localStorage.setItem(NB_ACTIVE_KEY, id);
 }
 
-// Care-log entries the caretaker adds via the quick-note box are stored
-// per patient in localStorage, on top of that patient's starter entries.
-function nbGetCareLog(id) {
-  const patient = nbGetPatient(id);
-  const extra = JSON.parse(localStorage.getItem(NB_CARELOG_KEY_PREFIX + id) || '[]');
-  return [...extra, ...patient.careLog];
+function nbGetCareLog(id){
+  const raw = localStorage.getItem(NB_CARELOG_KEY_PREFIX + id);
+  return raw ? JSON.parse(raw) : [
+    '8:15 AM: (System) Daily routine loaded.'
+  ];
 }
 
-function nbAddCareLogEntry(id, htmlText) {
-  const extra = JSON.parse(localStorage.getItem(NB_CARELOG_KEY_PREFIX + id) || '[]');
-  extra.unshift(htmlText);
-  localStorage.setItem(NB_CARELOG_KEY_PREFIX + id, JSON.stringify(extra));
+function nbAddCareLogEntry(id, entryText){
+  const entries = nbGetCareLog(id);
+  entries.unshift(entryText);
+  localStorage.setItem(NB_CARELOG_KEY_PREFIX + id, JSON.stringify(entries));
 }

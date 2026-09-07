@@ -2,6 +2,13 @@
 // NeuroBloom dashboard — multi-patient rendering + interactions
 // ============================================================
 
+// Translation state — declared up top because nbRenderPatient() (called
+// during initial page load, further down) reads nbActiveLang via
+// nbApplyActiveTranslation(). A `let`/`const` declared later in the file
+// can't be accessed before its own line runs, so this has to live here.
+let nbActiveLang = 'en';
+const nbTranslationCache = {}; // { langCode: { originalText: translatedText } }
+
 function setToggle(isOn){
   document.getElementById('toggleOn').classList.toggle('on', isOn);
   document.getElementById('toggleOff').classList.toggle('on', !isOn);
@@ -47,15 +54,12 @@ function nbRenderPatient(id){
     alertPill.style.display = (patient.alert && notifsOn) ? 'inline-block' : 'none';
   }
 
-  // Exercise progress
+  // Exercise progress (physical exercise removed — cognitive only)
   const exerciseHeading = document.getElementById('exerciseHeading');
   if (exerciseHeading) exerciseHeading.textContent = `${patient.name}'s Exercise Progress`;
 
   const cognitiveEl = document.getElementById('cognitiveExerciseText');
   if (cognitiveEl) cognitiveEl.innerHTML = `${patient.cognitiveDone} of ${patient.cognitiveTotal}<span>Cognitive Exercises</span>`;
-
-  const physicalEl = document.getElementById('physicalExerciseText');
-  if (physicalEl) physicalEl.innerHTML = `${patient.physicalDone} of ${patient.physicalTotal}<span>Physical Exercise</span>`;
 
   const barFill = document.getElementById('exerciseBarFill');
   if (barFill) barFill.style.width = patient.exercisePercent + '%';
@@ -101,14 +105,12 @@ function nbRenderPatient(id){
     }
   }
 
-  // Notes
-  setText('noteAvatarInitial', patient.note.initial);
-  const noteWho = document.getElementById('noteWho');
-  if (noteWho) noteWho.innerHTML = `${patient.note.name} <span>${patient.note.org} · ${patient.note.time}</span>`;
-  setText('noteText', patient.note.text);
-
-  // Care Logs
+  // Care Logs (doctor's note removed — Care Logs box stays)
   nbRenderCareLog(patient.id);
+
+  // Re-apply translation to the freshly rendered text, if a non-English
+  // language is currently selected.
+  if (typeof nbApplyActiveTranslation === 'function') nbApplyActiveTranslation();
 }
 
 function setText(id, text){
@@ -183,6 +185,7 @@ if (quickNoteInput) {
     const activeId = nbGetActivePatientId();
     nbAddCareLogEntry(activeId, `${time}: (Caregiver log) ${text}`);
     nbRenderCareLog(activeId);
+    if (typeof nbApplyActiveTranslation === 'function') nbApplyActiveTranslation();
     quickNoteInput.value = '';
   });
 }
@@ -298,3 +301,147 @@ if (useLiveLocationBtn && locationValueEl) {
     );
   });
 }
+
+// ============================================================
+// Translate feature
+// Wires the four language chips at the bottom (Assamese / English /
+// Manipuri / Mizo) to actually translate the patient-facing text on
+// screen. Uses the free MyMemory Translation API (no key required).
+// ============================================================
+
+// ISO codes MyMemory expects. Assamese and Bengali (used here as the
+// nearest supported code for Manipuri, which is often written in Bengali
+// script) work well. Mizo has very limited machine-translation support —
+// if the API can't handle it, we leave the original English text in place
+// rather than show garbled output.
+const NB_LANG_CODES = {
+  'অসমীয়া': 'as',
+  'English': 'en',
+  'বাংলা': 'bn',
+  'Mizo': 'lus'
+};
+
+// Containers whose text should NEVER be translated: the brand name, proper
+// nouns (patient dropdown, location values), raw timestamps, and the
+// language-picker buttons themselves (translating "English"/"Mizo" would be
+// confusing for the very control used to pick a language).
+const NB_TRANSLATE_EXCLUDE_SELECTORS = [
+  '.brand',            // "NeuroBloom" / "COGNITIVE ASSISTANT"
+  '.lang-btns',        // the language chips
+  '#patientSelect',    // patient names
+  '#locationSelect',   // location dropdown values
+  '.settings-select',
+  '#locationChipValue',
+  '#statusLastActive', // timestamp
+  '.s-time',           // schedule timestamps
+  '.text-size-btns',   // "A-" / "A+"
+  '#settingsTextSize'  // "A" size buttons
+];
+
+function nbShouldSkipTextNode(node){
+  const text = node.nodeValue;
+  if (!text || !text.trim()) return true;
+
+  const parent = node.parentElement;
+  if (!parent) return true;
+  if (NB_TRANSLATE_EXCLUDE_SELECTORS.some(sel => parent.closest(sel))) return true;
+
+  // Skip strings with no actual letters (pure emoji/symbols/numbers/times),
+  // since there's nothing meaningful to translate.
+  if (!/\p{L}/u.test(text)) return true;
+
+  return false;
+}
+
+// Walks every text node inside the dashboard so newly rendered patient data
+// (schedule items, tags, meta text, care log entries, etc.) gets picked up
+// automatically — no need to hand-list every element.
+function nbCollectTranslatableTextNodes(){
+  const root = document.querySelector('.wrap');
+  if (!root) return [];
+
+  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+  const nodes = [];
+  let n;
+  while ((n = walker.nextNode())) {
+    if (!nbShouldSkipTextNode(n)) nodes.push(n);
+  }
+  return nodes;
+}
+
+async function nbTranslateText(text, langCode){
+  if (!text || !text.trim()) return text;
+  if (!nbTranslationCache[langCode]) nbTranslationCache[langCode] = {};
+  if (nbTranslationCache[langCode][text]) return nbTranslationCache[langCode][text];
+
+  try {
+    const res = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${langCode}`
+    );
+    const data = await res.json();
+    const translated = data?.responseData?.translatedText;
+    if (!translated || data.responseStatus !== 200) return text; // fall back silently
+    nbTranslationCache[langCode][text] = translated;
+    return translated;
+  } catch (err) {
+    return text; // offline or API hiccup — keep original text
+  }
+}
+
+// The quick-note input's placeholder is an attribute, not a text node, so it
+// needs its own pass.
+async function nbTranslatePlaceholder(langCode){
+  const input = document.getElementById('quickNoteInput');
+  if (!input) return;
+  if (!input.dataset.nbOriginal) input.dataset.nbOriginal = input.placeholder;
+
+  if (langCode === 'en') {
+    input.placeholder = input.dataset.nbOriginal;
+    return;
+  }
+  input.placeholder = await nbTranslateText(input.dataset.nbOriginal, langCode);
+}
+
+async function nbTranslatePage(langCode){
+  nbActiveLang = langCode;
+
+  const nodes = nbCollectTranslatableTextNodes();
+
+  // Cache each node's original English text once (as a plain JS property —
+  // text nodes don't have `dataset`), so we always translate from English
+  // rather than re-translating an already-translated string.
+  nodes.forEach(node => {
+    if (node.nbOriginal === undefined) node.nbOriginal = node.nodeValue;
+  });
+
+  if (langCode === 'en') {
+    nodes.forEach(node => { node.nodeValue = node.nbOriginal; });
+    await nbTranslatePlaceholder('en');
+    return;
+  }
+
+  await Promise.all([
+    ...nodes.map(async node => {
+      const translated = await nbTranslateText(node.nbOriginal, langCode);
+      node.nodeValue = translated;
+    }),
+    nbTranslatePlaceholder(langCode)
+  ]);
+}
+
+// Re-applies the currently selected language after new content is rendered
+// (e.g. switching patients, the schedule refreshing, or a new care log entry).
+function nbApplyActiveTranslation(){
+  if (nbActiveLang !== 'en') nbTranslatePage(nbActiveLang);
+}
+
+document.querySelectorAll('.lang-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const label = btn.querySelector('.top')?.textContent.trim();
+    const langCode = NB_LANG_CODES[label] || 'en';
+    nbTranslatePage(langCode);
+  });
+});

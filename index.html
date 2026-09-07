@@ -10,224 +10,196 @@
 </head>
 <body>
 <div class="wrap">
-
-  <!-- Top nav -->
-  <div class="topnav">
-    <div class="brand">
-      <div class="brand-mark">
-        <svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-2 2-3 4-3 6.5S10.5 14 12 14s3-2 3-4.5S14 5 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 14v7M9 21h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      </div>
-      <div class="brand-text">
-        <div class="name">NeuroBloom</div>
-        <div class="sub">COGNITIVE ASSISTANT</div>
-      </div>
-    </div>
-
-    <div class="patient-switch">
-      <span class="patient-switch-label">Caring for</span>
-      <select id="patientSelect" class="patient-select"></select>
-    </div>
-    <div class="nav-links">
-      <button class="nav-pill active">▦ Dashboard</button>
-      <button class="nav-pill">▢ Games</button>
-      <button class="nav-pill">↗ Progress</button>
-      <button class="nav-pill">⏰ Reminders</button>
-      <div class="settings-wrap">
-        <button class="icon-btn" id="settingsBtn">⚙</button>
-        <div class="settings-panel" id="settingsPanel">
-          <div class="settings-header">
-            <h3>Settings</h3>
-            <button class="close-analysis" id="closeSettings">✕</button>
-          </div>
-
-          <div class="settings-row">
-            <div class="settings-label">Notifications<span>Alerts for mood & activity changes</span></div>
-            <label class="switch">
-              <input type="checkbox" id="notifToggle" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="settings-row">
-            <div class="settings-label">Auto-refresh<span>Keep dashboard live every 5 min</span></div>
-            <label class="switch">
-              <input type="checkbox" id="autoRefreshToggle" checked>
-              <span class="slider"></span>
-            </label>
-          </div>
-
-          <div class="settings-divider"></div>
-
-          <div class="settings-label" style="margin-bottom:10px;">Default Text Size</div>
-          <div class="settings-textsize" id="settingsTextSize">
-            <button data-size="small">A</button>
-            <button data-size="medium" class="active">A</button>
-            <button data-size="large">A</button>
-          </div>
-
-          <div class="settings-divider"></div>
-
-          <div class="settings-label" style="margin-bottom:10px;">Active Location</div>
-          <select id="locationSelect" class="settings-select">
-            <option>Guwahati, Assam</option>
-            <option>Jhansi, Uttar Pradesh</option>
-            <option>Delhi NCR</option>
-          </select>
-          <button type="button" id="useLiveLocationBtn" class="live-location-btn">📍 Use My Live Location</button>
-          <div class="location-status" id="locationStatus"></div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="care-logs-tip">🗒 Care Logs</div>
-
-  <!-- Greeting banner -->
-  <div class="banner">
-    <img class="banner-photo" id="bannerPhoto" src="" alt="">
-    <div class="banner-photo photo-placeholder" id="bannerPhotoFallback" style="display:none;"></div>
-    <div class="banner-body">
-      <div class="banner-date">📅 Today is Wednesday, October 16 · Assamese Year 1946</div>
-      <h1 id="greetingTitle">Good Morning!</h1>
-      <p>Daily Summary: Activity and well-being tracking is active.</p>
-    </div>
-    <div class="location-chip">
-      <div class="label">ACTIVE LOCATION <span class="live-dot" id="liveDot" style="display:none;">● LIVE</span></div>
-      <div class="value" id="locationChipValue">—</div>
-    </div>
-  </div>
-
-  <!-- Row 1: quick-glance cards -->
-  <div class="row row-1">
-
-    <div class="card">
-      <h2><span class="dot"></span><span id="statusHeading">Current Status</span></h2>
-      <div class="status-person">
-        <img id="statusPhoto" src="" alt="">
-        <div class="status-avatar photo-placeholder" id="statusPhotoFallback" style="display:none;"></div>
-        <div>
-          <div class="who">Last Active</div>
-          <div class="when" id="statusLastActive">—</div>
-        </div>
-        <div class="status-more">⋯</div>
-      </div>
-      <div class="status-rows">
-        <div class="status-row"><span class="k">Mood:</span><span class="v" id="statusMood">—</span></div>
-        <div class="status-row"><span class="k">Activity Level:</span><span class="v" id="statusActivity">—</span></div>
-        <div class="status-row"><span class="k">Focus level:</span><span class="v" id="statusFocus">—</span></div>
-      </div>
-      <span class="alert-pill" id="statusAlertPill">Alert</span>
-    </div>
-
-    <div class="card">
-      <h2><span id="exerciseHeading">Exercise Progress</span></h2>
-      <div class="exercise-row">
-        <div class="exercise-block" id="cognitiveExerciseText">3 of 4<span>Cognitive Exercises</span></div>
-        <div class="exercise-block" id="physicalExerciseText">1 of 1<span>Physical Exercise</span></div>
-      </div>
-      <div class="bar-track"><div class="bar-fill" id="exerciseBarFill" style="width:75%"></div></div>
-      <div class="remaining" id="remainingText">Remaining: —</div>
-    </div>
-
-  </div>
-
-  <!-- Row 2: Daily Activity Overview + Notes/Care -->
-  <div class="row row-2">
-
-    <div class="card">
-      <div class="activity-head">
-        <h2 style="margin-bottom:0;"><span class="dot"></span>Daily Activity Overview</h2>
-        <div class="activity-clock">🕐</div>
-      </div>
-      <div class="eyebrow" style="margin-top:16px;">FOCUS</div>
-      <div class="play-time" id="totalPlayTime">Total Play Time: —</div>
-      <div class="tag-row" id="tagRow"></div>
-
-      <div class="game-list" id="gameList">
-        <a class="game-row" data-game="memory" href="analysis-memory.html">
-          <div class="g-icon memory">🧩</div>
-          <div class="g-info">
-            <div class="g-name">Memory Match</div>
-            <div class="g-meta" id="memoryMeta">—</div>
-          </div>
-          <div class="g-arrow">›</div>
-        </a>
-        <a class="game-row" data-game="best" href="analysis-best.html">
-          <div class="g-icon best">🏆</div>
-          <div class="g-info">
-            <div class="g-name">Recent Best (Aggregate)</div>
-            <div class="g-meta" id="bestMeta">—</div>
-          </div>
-          <div class="g-arrow">›</div>
-        </a>
-        <a class="game-row" data-game="logic" href="analysis-logic.html">
-          <div class="g-icon logic">🔷</div>
-          <div class="g-info">
-            <div class="g-name">Logic / Shapes</div>
-            <div class="g-meta" id="logicMeta">—</div>
-          </div>
-          <div class="g-arrow">›</div>
-        </a>
-      </div>
-
-      <div class="hint-note">👆 Click a game to open its full performance analysis.</div>
-    </div>
-
-    <div class="card">
-      <h2><span class="dot"></span>Today's Schedule</h2>
-      <div class="schedule" id="scheduleList"></div>
-
-      <h2 style="margin-top:6px;">Notes</h2>
-      <div class="note-item">
-        <div class="note-avatar" id="noteAvatarInitial">D</div>
-        <div class="note-body">
-          <div class="who" id="noteWho">— <span>— · —</span></div>
-          <p id="noteText">—</p>
-        </div>
-      </div>
-
-      <div class="care-log" id="careLog">
-        <b>Care Logs</b><br>
-        <div id="careLogEntries"></div>
-      </div>
-      <input
-        type="text"
-        id="quickNoteInput"
-        class="quick-note"
-        placeholder="Quick new caretaker note…"
-        autocomplete="off"
-      >
-    </div>
-
-  </div>
-
-  <!-- Full-width controls footer -->
-  <div class="card controls-card">
-    <div class="control-group">
-      <div class="control-icon">文</div>
-      <div class="control-label">Translate to/from<span>Patient Language</span></div>
-    </div>
-    <div class="control-group">
-      <div class="control-icon">🎙</div>
-      <div class="control-label">Remote Voice-Assist<span>Live caregiver audio</span></div>
-    </div>
-    <div class="toggle">
-      <button id="toggleOff" class="on" onclick="setToggle(false)">OFF</button>
-      <button id="toggleOn" onclick="setToggle(true)">ON</button>
-    </div>
-    <div class="text-size-btns">
-      <button onclick="resizeText(-1)">A-</button>
-      <button onclick="resizeText(1)">A+</button>
-    </div>
-    <div class="lang-btns">
-      <div class="lang-btn active"><div class="top">অসমীয়া</div><div class="bottom">Assamese</div></div>
-      <div class="lang-btn"><div class="top">English</div><div class="bottom">English</div></div>
-      <div class="lang-btn"><div class="top">বাংলা</div><div class="bottom">Manipuri</div></div>
-      <div class="lang-btn"><div class="top">Mizo</div><div class="bottom">Mizo</div></div>
-    </div>
-  </div>
-
+<!-- Top nav -->
+<div class="topnav">
+<div class="brand">
+<div class="brand-mark">
+<svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-2 2-3 4-3 6.5S10.5 14 12 14s3-2 3-4.5S14 5 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 14v7M9 21h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+</div>
+<div class="brand-text">
+<div class="name">NeuroBloom</div>
+<div class="sub">COGNITIVE ASSISTANT</div>
+</div>
+</div>
+<div class="patient-switch">
+<span class="patient-switch-label">Caring for</span>
+<select id="patientSelect" class="patient-select"></select>
+</div>
+<div class="nav-links">
+<button class="nav-pill active">▦ Dashboard</button>
+<button class="nav-pill">▢ Games</button>
+<button class="nav-pill">↗ Progress</button>
+<button class="nav-pill">⏰ Reminders</button>
+<div class="settings-wrap">
+<button class="icon-btn" id="settingsBtn">⚙</button>
+<div class="settings-panel" id="settingsPanel">
+<div class="settings-header">
+<h3>Settings</h3>
+<button class="close-analysis" id="closeSettings">✕</button>
+</div>
+<div class="settings-row">
+<div class="settings-label">Notifications<span>Alerts for mood & activity changes</span></div>
+<label class="switch">
+<input type="checkbox" id="notifToggle" checked>
+<span class="slider"></span>
+</label>
+</div>
+<div class="settings-row">
+<div class="settings-label">Auto-refresh<span>Keep dashboard live every 5 min</span></div>
+<label class="switch">
+<input type="checkbox" id="autoRefreshToggle" checked>
+<span class="slider"></span>
+</label>
+</div>
+<div class="settings-divider"></div>
+<div class="settings-label" style="margin-bottom:10px;">Default Text Size</div>
+<div class="settings-textsize" id="settingsTextSize">
+<button data-size="small">A</button>
+<button data-size="medium" class="active">A</button>
+<button data-size="large">A</button>
+</div>
+<div class="settings-divider"></div>
+<div class="settings-label" style="margin-bottom:10px;">Active Location</div>
+<select id="locationSelect" class="settings-select">
+<option>Guwahati, Assam</option>
+<option>Jhansi, Uttar Pradesh</option>
+<option>Delhi NCR</option>
+</select>
+<button type="button" id="useLiveLocationBtn" class="live-location-btn">📍 Use My Live Location</button>
+<div class="location-status" id="locationStatus"></div>
+</div>
+</div>
+</div>
 </div>
 
+<div class="care-logs-tip">🗒 Care Logs</div>
+
+<!-- Greeting banner -->
+<div class="banner">
+<img class="banner-photo" id="bannerPhoto" src="" alt="">
+<div class="banner-photo photo-placeholder" id="bannerPhotoFallback" style="display:none;"></div>
+<div class="banner-body">
+<div class="banner-date">📅 Today is Wednesday, October 16 · Assamese Year 1946</div>
+<h1 id="greetingTitle">Good Morning!</h1>
+<p>Daily Summary: Activity and well-being tracking is active.</p>
+</div>
+<div class="location-chip">
+<div class="label">ACTIVE LOCATION <span class="live-dot" id="liveDot" style="display:none;">● LIVE</span></div>
+<div class="value" id="locationChipValue">—</div>
+</div>
+</div>
+
+<!-- Row 1: quick-glance cards -->
+<div class="row row-1">
+<div class="card">
+<h2><span class="dot"></span><span id="statusHeading">Current Status</span></h2>
+<div class="status-person">
+<img id="statusPhoto" src="" alt="">
+<div class="status-avatar photo-placeholder" id="statusPhotoFallback" style="display:none;"></div>
+<div>
+<div class="who">Last Active</div>
+<div class="when" id="statusLastActive">—</div>
+</div>
+<div class="status-more">⋯</div>
+</div>
+<div class="status-rows">
+<div class="status-row"><span class="k">Mood:</span><span class="v" id="statusMood">—</span></div>
+<div class="status-row"><span class="k">Activity Level:</span><span class="v" id="statusActivity">—</span></div>
+<div class="status-row"><span class="k">Focus level:</span><span class="v" id="statusFocus">—</span></div>
+</div>
+<span class="alert-pill" id="statusAlertPill">Alert</span>
+</div>
+<div class="card">
+<h2><span id="exerciseHeading">Exercise Progress</span></h2>
+<div class="exercise-row">
+<div class="exercise-block" id="cognitiveExerciseText">3 of 4<span>Cognitive Exercises</span></div>
+</div>
+<div class="bar-track"><div class="bar-fill" id="exerciseBarFill" style="width:75%"></div></div>
+<div class="remaining" id="remainingText">Remaining: —</div>
+</div>
+</div>
+
+<!-- Row 2: Daily Activity Overview + Notes/Care -->
+<div class="row row-2">
+<div class="card">
+<div class="activity-head">
+<h2 style="margin-bottom:0;"><span class="dot"></span>Daily Activity Overview</h2>
+<div class="activity-clock">🕐</div>
+</div>
+<div class="eyebrow" style="margin-top:16px;">FOCUS</div>
+<div class="play-time" id="totalPlayTime">Total Play Time: —</div>
+<div class="tag-row" id="tagRow"></div>
+<div class="game-list" id="gameList">
+<a class="game-row" data-game="memory" href="analysis-memory.html">
+<div class="g-icon memory">🧩</div>
+<div class="g-info">
+<div class="g-name">Memory Match</div>
+<div class="g-meta" id="memoryMeta">—</div>
+</div>
+<div class="g-arrow">›</div>
+</a>
+<a class="game-row" data-game="logic" href="analysis-logic.html">
+<div class="g-icon logic">🔷</div>
+<div class="g-info">
+<div class="g-name">Logic / Shapes</div>
+<div class="g-meta" id="logicMeta">—</div>
+</div>
+<div class="g-arrow">›</div>
+</a>
+<a class="game-row" data-game="best" href="analysis-best.html">
+<div class="g-icon best">🏆</div>
+<div class="g-info">
+<div class="g-name">Recent Best (Aggregate)</div>
+<div class="g-meta" id="bestMeta">—</div>
+</div>
+<div class="g-arrow">›</div>
+</a>
+</div>
+<div class="hint-note">👆 Click a game to open its full performance analysis.</div>
+</div>
+<div class="card">
+<h2><span class="dot"></span>Today's Schedule</h2>
+<div class="schedule" id="scheduleList"></div>
+<div class="care-log" id="careLog">
+<b>Care Logs</b><br>
+<div id="careLogEntries"></div>
+</div>
+<input
+type="text"
+id="quickNoteInput"
+class="quick-note"
+placeholder="Quick new caretaker note…"
+autocomplete="off"
+>
+</div>
+</div>
+
+<!-- Full-width controls footer -->
+<div class="card controls-card">
+<div class="control-group">
+<div class="control-icon">文</div>
+<div class="control-label">Translate to/from<span>Patient Language</span></div>
+</div>
+<div class="control-group">
+<div class="control-icon">🎙</div>
+<div class="control-label">Remote Voice-Assist<span>Live caregiver audio</span></div>
+</div>
+<div class="toggle">
+<button id="toggleOff" class="on" onclick="setToggle(false)">OFF</button>
+<button id="toggleOn" onclick="setToggle(true)">ON</button>
+</div>
+<div class="text-size-btns">
+<button onclick="resizeText(-1)">A-</button>
+<button onclick="resizeText(1)">A+</button>
+</div>
+<div class="lang-btns">
+<div class="lang-btn active"><div class="top">অসমীয়া</div><div class="bottom">Assamese</div></div>
+<div class="lang-btn"><div class="top">English</div><div class="bottom">English</div></div>
+<div class="lang-btn"><div class="top">বাংলা</div><div class="bottom">Manipuri</div></div>
+<div class="lang-btn"><div class="top">Mizo</div><div class="bottom">Mizo</div></div>
+</div>
+</div>
+</div>
 <script src="patients.js"></script>
 <script src="script.js"></script>
 </body>
