@@ -60,11 +60,15 @@
 </div>
 <div class="settings-divider"></div>
 <div class="settings-label" style="margin-bottom:10px;">Active Location</div>
-<select id="locationSelect" class="settings-select">
-<option>Guwahati, Assam</option>
-<option>Jhansi, Uttar Pradesh</option>
-<option>Delhi NCR</option>
-</select>
+<select id="locationSelect" class="settings-select"></select>
+
+<div class="location-chip-list" id="locationManageList"></div>
+
+<div class="location-add-row">
+<input type="text" id="newLocationInput" class="location-add-input" placeholder="Add a location…">
+<button type="button" id="addLocationBtn" class="location-add-btn">Add</button>
+</div>
+
 <button type="button" id="useLiveLocationBtn" class="live-location-btn">📍 Use My Live Location</button>
 <div class="location-status" id="locationStatus"></div>
 </div>

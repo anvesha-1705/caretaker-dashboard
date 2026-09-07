@@ -179,6 +179,68 @@ body {
   color: var(--ink);
 }
 
+.location-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+.location-chip-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: var(--cream-deep);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--ink-soft);
+}
+.location-chip-item.active {
+  background: var(--teal);
+  color: var(--white);
+  border-color: var(--teal);
+}
+.location-remove-btn {
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  color: inherit;
+  opacity: 0.7;
+  padding: 0;
+}
+.location-remove-btn:hover { opacity: 1; }
+
+.location-add-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+.location-add-input {
+  flex: 1;
+  border: 1px solid var(--line);
+  background: var(--cream-deep);
+  border-radius: var(--radius-sm);
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 13px;
+  color: var(--ink);
+}
+.location-add-btn {
+  border: none;
+  background: var(--teal);
+  color: var(--white);
+  font-family: inherit;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  cursor: pointer;
+}
+.location-add-btn:hover { opacity: 0.9; }
+
 .live-location-btn {
   width: 100%;
   margin-top: 10px;
@@ -425,7 +487,24 @@ body {
   border-top: 1px dashed rgba(122, 82, 9, 0.25);
   font-size: 12.5px;
   color: #6B4707;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
+.care-log-entry-text { flex: 1; }
+.care-log-delete-btn {
+  flex-shrink: 0;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+  color: #6B4707;
+  opacity: 0.5;
+  padding: 2px;
+}
+.care-log-delete-btn:hover { opacity: 1; color: #B23A3A; }
 .care-log-entry:first-of-type { border-top: none; }
 
 .quick-note {
@@ -518,4 +597,5 @@ body {
 @media (max-width: 560px) {
   .wrap { padding: 14px 14px 32px; }
   .nav-links { flex-wrap: wrap; }
+  .banner-body h1 { font-size: 20px; }
 }

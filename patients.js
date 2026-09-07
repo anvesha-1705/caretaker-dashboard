@@ -128,3 +128,9 @@ function nbAddCareLogEntry(id, entryText){
   entries.unshift(entryText);
   localStorage.setItem(NB_CARELOG_KEY_PREFIX + id, JSON.stringify(entries));
 }
+
+function nbRemoveCareLogEntry(id, index){
+  const entries = nbGetCareLog(id);
+  entries.splice(index, 1);
+  localStorage.setItem(NB_CARELOG_KEY_PREFIX + id, JSON.stringify(entries));
+}

@@ -147,7 +147,31 @@ function nbRenderCareLog(id){
   const careLogEntries = document.getElementById('careLogEntries');
   if (!careLogEntries) return;
   const entries = nbGetCareLog(id);
-  careLogEntries.innerHTML = entries.map(e => `<div class="care-log-entry">${e}</div>`).join('');
+
+  careLogEntries.innerHTML = '';
+  entries.forEach((entryText, index) => {
+    const row = document.createElement('div');
+    row.className = 'care-log-entry';
+
+    const label = document.createElement('span');
+    label.className = 'care-log-entry-text';
+    label.textContent = entryText;
+    row.appendChild(label);
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.type = 'button';
+    deleteBtn.className = 'care-log-delete-btn';
+    deleteBtn.title = 'Delete this note';
+    deleteBtn.textContent = '✕';
+    deleteBtn.addEventListener('click', () => {
+      nbRemoveCareLogEntry(id, index);
+      nbRenderCareLog(id);
+      if (typeof nbApplyActiveTranslation === 'function') nbApplyActiveTranslation();
+    });
+    row.appendChild(deleteBtn);
+
+    careLogEntries.appendChild(row);
+  });
 }
 
 // ---------- Patient switcher ----------
@@ -236,15 +260,147 @@ textSizeBtns.forEach(btn => {
   });
 });
 
+// ============================================================
 // Manual location override from settings dropdown
+// Persists the saved-location list and the active pick in
+// localStorage so both survive a page refresh, instead of always
+// resetting to the three hardcoded defaults.
+// ============================================================
+const NB_LOCATION_KEY = 'neurobloom_locations';
+const NB_ACTIVE_LOCATION_KEY = 'neurobloom_active_location';
+const NB_DEFAULT_LOCATIONS = ['Guwahati, Assam', 'Jhansi, Uttar Pradesh', 'Delhi NCR'];
+
 const locationSelect = document.getElementById('locationSelect');
 const locationValueEl = document.getElementById('locationChipValue');
 const liveDotEl = document.getElementById('liveDot');
+const locationManageList = document.getElementById('locationManageList');
+const newLocationInput = document.getElementById('newLocationInput');
+const addLocationBtn = document.getElementById('addLocationBtn');
 
-if (locationSelect && locationValueEl) {
+function nbGetSavedLocations() {
+  try {
+    const saved = JSON.parse(localStorage.getItem(NB_LOCATION_KEY));
+    return Array.isArray(saved) && saved.length ? saved : [...NB_DEFAULT_LOCATIONS];
+  } catch {
+    return [...NB_DEFAULT_LOCATIONS];
+  }
+}
+
+function nbSaveLocations(list) {
+  localStorage.setItem(NB_LOCATION_KEY, JSON.stringify(list));
+}
+
+function nbGetActiveLocation() {
+  return localStorage.getItem(NB_ACTIVE_LOCATION_KEY) || nbGetSavedLocations()[0];
+}
+
+function nbSetActiveLocation(loc) {
+  localStorage.setItem(NB_ACTIVE_LOCATION_KEY, loc);
+  if (locationValueEl) locationValueEl.textContent = loc;
+  if (liveDotEl) liveDotEl.style.display = 'none';
+}
+
+function nbRenderLocationDropdown() {
+  if (!locationSelect) return;
+  const locations = nbGetSavedLocations();
+  const active = nbGetActiveLocation();
+
+  locationSelect.innerHTML = '';
+  locations.forEach((loc) => {
+    const opt = document.createElement('option');
+    opt.value = loc;
+    opt.textContent = loc;
+    if (loc === active) opt.selected = true;
+    locationSelect.appendChild(opt);
+  });
+}
+
+function nbRenderLocationManageList() {
+  if (!locationManageList) return;
+  const locations = nbGetSavedLocations();
+  const active = nbGetActiveLocation();
+
+  locationManageList.innerHTML = '';
+  locations.forEach((loc) => {
+    const chip = document.createElement('span');
+    chip.className = 'location-chip-item' + (loc === active ? ' active' : '');
+
+    const label = document.createElement('span');
+    label.textContent = loc;
+    chip.appendChild(label);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'location-remove-btn';
+    removeBtn.title = `Remove ${loc}`;
+    removeBtn.textContent = '✕';
+    removeBtn.addEventListener('click', () => nbRemoveLocation(loc));
+    chip.appendChild(removeBtn);
+
+    locationManageList.appendChild(chip);
+  });
+}
+
+function nbRefreshLocationUI() {
+  nbRenderLocationDropdown();
+  nbRenderLocationManageList();
+}
+
+function nbAddLocation(name) {
+  const trimmed = (name || '').trim();
+  if (!trimmed) return;
+
+  const locations = nbGetSavedLocations();
+  if (!locations.includes(trimmed)) {
+    locations.push(trimmed);
+    nbSaveLocations(locations);
+  }
+  nbSetActiveLocation(trimmed);
+  nbRefreshLocationUI();
+}
+
+function nbRemoveLocation(name) {
+  let locations = nbGetSavedLocations();
+
+  if (locations.length <= 1) {
+    const statusEl = document.getElementById('locationStatus');
+    if (statusEl) {
+      statusEl.textContent = 'You need at least one saved location.';
+      statusEl.classList.add('error');
+    }
+    return;
+  }
+
+  locations = locations.filter((loc) => loc !== name);
+  nbSaveLocations(locations);
+
+  if (nbGetActiveLocation() === name) {
+    nbSetActiveLocation(locations[0]);
+  }
+  nbRefreshLocationUI();
+}
+
+// Initial paint on page load
+nbRefreshLocationUI();
+if (locationValueEl) locationValueEl.textContent = nbGetActiveLocation();
+
+if (locationSelect) {
   locationSelect.addEventListener('change', () => {
-    locationValueEl.textContent = locationSelect.value;
-    if (liveDotEl) liveDotEl.style.display = 'none';
+    nbSetActiveLocation(locationSelect.value);
+    nbRenderLocationManageList();
+  });
+}
+
+if (addLocationBtn && newLocationInput) {
+  addLocationBtn.addEventListener('click', () => {
+    nbAddLocation(newLocationInput.value);
+    newLocationInput.value = '';
+  });
+  newLocationInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      nbAddLocation(newLocationInput.value);
+      newLocationInput.value = '';
+    }
   });
 }
 
@@ -332,6 +488,8 @@ const NB_TRANSLATE_EXCLUDE_SELECTORS = [
   '#locationSelect',   // location dropdown values
   '.settings-select',
   '#locationChipValue',
+  '#locationManageList', // saved-location chip list
+  '#newLocationInput',    // add-location input field
   '#statusLastActive', // timestamp
   '.s-time',           // schedule timestamps
   '.text-size-btns',   // "A-" / "A+"
