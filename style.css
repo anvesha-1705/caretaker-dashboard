@@ -1,11 +1,3 @@
-/* =========================================================
-   NeuroBloom · Caretaker Portal
-   Palette applied from brand kit:
-   Cream  #FFF9ED   Teal    #176B5B   Blue   #3D82C4
-   Yellow #F4B942   Green   #2E8B68   Purple #9C7AEA
-   Coral  #E57373   Ink     #2E2E2E
-   ========================================================= */
-
 :root {
   --cream:        #FFF9ED;
   --cream-deep:   #FBF2DC;
@@ -50,7 +42,7 @@ body {
   padding: 20px 28px 48px;
 }
 
-/* ---------- Top nav ---------- */
+/* Top nav */
 .topnav {
   display: flex;
   align-items: center;
@@ -291,7 +283,7 @@ body {
   border-radius: 999px;
 }
 
-/* ---------- Greeting banner ---------- */
+ /* Greeting banner  */
 .banner {
   margin-top: 16px;
   background: linear-gradient(120deg, var(--teal) 0%, var(--teal-deep) 100%);
@@ -330,7 +322,7 @@ body {
 .location-chip .value { font-size: 15px; font-weight: 800; margin-top: 2px; }
 .live-dot { color: var(--yellow); font-size: 10px; }
 
-/* ---------- Rows & cards ---------- */
+/*  Rows & cards  */
 .row { display: grid; gap: 18px; margin-top: 18px; }
 .row-1 { grid-template-columns: 1fr 1fr; }
 .row-2 { grid-template-columns: 1.3fr 1fr; align-items: start; }
@@ -544,7 +536,7 @@ body {
 }
 .quick-note:focus { outline: 2px solid var(--teal); background: var(--white); }
 
-/* ---------- Controls footer ---------- */
+/*  Controls footer  */
 .controls-card {
   margin-top: 18px;
   display: flex;
@@ -609,7 +601,7 @@ body {
 .lang-btn.active { background: var(--teal); border-color: var(--teal); }
 .lang-btn.active .top, .lang-btn.active .bottom { color: var(--white); }
 
-/* ---------- Responsive ---------- */
+/*  Responsive  */
 @media (max-width: 980px) {
   .row-1, .row-2 { grid-template-columns: 1fr; }
   .topnav { flex-wrap: wrap; }
@@ -624,36 +616,25 @@ body {
   .banner-body h1 { font-size: 20px; }
 }
 
-/* Narrow phones (~325–480px) */
+/* Narrow phones */
 @media (max-width: 480px) {
   .wrap { padding: 12px 12px 28px; overflow-x: hidden; }
 
-  /* Stack the top nav into rows instead of squeezing everything in one line */
   .topnav { flex-direction: column; align-items: stretch; gap: 14px; padding: 14px 16px; }
   .brand { justify-content: flex-start; min-width: 0; }
   .patient-switch { justify-content: space-between; min-width: 0; }
   .patient-select { flex: 1; min-width: 0; }
 
-  /* Top row: NeuroBloom brand on the left, hamburger toggle on the right.
-     nav-links is hidden by default and only shown once the toggle is
-     opened via JS. */
+  /* hamburger toggle */
   .topnav-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
   .nav-toggle { display: flex; }
   .nav-links { display: none; }
   .nav-links.open { display: flex; }
 
-  /* Nav pills stacked full-width — two-column grid overflowed on narrow
-     screens because text like "Reminders" can't shrink below its content
-     width, which pushed the whole page into horizontal scroll. */
   .nav-links { flex-direction: column; align-items: stretch; gap: 8px; }
   .nav-pill { flex: 1 1 auto; width: 100%; min-width: 0; text-align: center; font-size: 14px; padding: 10px 6px; }
   .settings-wrap { display: flex; justify-content: center; }
 
-  /* Settings panel: full-height sheet instead of a fixed 320px box that overflows.
-     top/bottom are both pinned (instead of relying on vh + the panel's natural
-     flow position) so the whole panel — including the location chips and the
-     "Use My Live Location" button at the bottom — always stays on screen and
-     scrolls internally, no matter how tall the content or how short the phone. */
   .settings-panel {
     position: fixed;
     top: 12px;
@@ -665,7 +646,6 @@ body {
     overflow-y: auto;
   }
 
-  /* Greeting banner: tighter padding, smaller avatar, location chip full-width */
   .banner { padding: 16px; gap: 12px; }
   .banner-photo, .photo-placeholder.banner-photo { width: 52px; height: 52px; }
   .banner-body { min-width: 0; }
@@ -674,11 +654,9 @@ body {
   .location-chip { min-width: 0; width: 100%; text-align: left; margin-top: 4px; }
   .location-chip .label { justify-content: flex-start; }
 
-  /* Cards */
   .card { padding: 16px; }
   .row { gap: 12px; }
 
-  /* Footer controls: everything centered and wrapping cleanly */
   .controls-card { justify-content: center; gap: 14px; }
   .lang-btns { margin-left: 0; width: 100%; justify-content: center; }
 }

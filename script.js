@@ -1,11 +1,3 @@
-// ============================================================
-// NeuroBloom dashboard — multi-patient rendering + interactions
-// ============================================================
-
-// Translation state — declared up top because nbRenderPatient() (called
-// during initial page load, further down) reads nbActiveLang via
-// nbApplyActiveTranslation(). A `let`/`const` declared later in the file
-// can't be accessed before its own line runs, so this has to live here.
 let nbActiveLang = 'en';
 const nbTranslationCache = {}; // { langCode: { originalText: translatedText } }
 
@@ -20,7 +12,7 @@ function resizeText(dir){
   document.body.style.fontSize = (16 * textScale) + 'px';
 }
 
-// ---------- Render a patient's data into the dashboard ----------
+//  Render a patient's data into the dashboard 
 function nbRenderPatient(id){
   const patient = nbGetPatient(id);
 
@@ -54,7 +46,7 @@ function nbRenderPatient(id){
     alertPill.style.display = (patient.alert && notifsOn) ? 'inline-block' : 'none';
   }
 
-  // Exercise progress (physical exercise removed — cognitive only)
+  // Exercise progress 
   const exerciseHeading = document.getElementById('exerciseHeading');
   if (exerciseHeading) exerciseHeading.textContent = `${patient.name}'s Exercise Progress`;
 
@@ -83,7 +75,6 @@ function nbRenderPatient(id){
   setText('bestMeta', patient.games.best.meta);
   setText('logicMeta', patient.games.logic.meta);
 
-  // Carry the active patient through to the performance-analysis pages
   document.querySelectorAll('.game-row[data-game]').forEach(row => {
     const type = row.getAttribute('data-game');
     row.href = `analysis-${type}.html?patient=${patient.id}`;
@@ -105,11 +96,10 @@ function nbRenderPatient(id){
     }
   }
 
-  // Care Logs (doctor's note removed — Care Logs box stays)
+  // Care Logs 
   nbRenderCareLog(patient.id);
 
-  // Re-apply translation to the freshly rendered text, if a non-English
-  // language is currently selected.
+  // Re-apply translation 
   if (typeof nbApplyActiveTranslation === 'function') nbApplyActiveTranslation();
 }
 
@@ -118,9 +108,6 @@ function setText(id, text){
   if (el) el.textContent = text;
 }
 
-// Shows the patient's photo if assets/<id>.jpg exists, otherwise a clean
-// initials placeholder. Toggles between img/fallback rather than
-// permanently replacing the node, so it keeps working across patient switches.
 function nbSetAvatar(imgId, fallbackId, patient){
   const img = document.getElementById(imgId);
   const fallback = document.getElementById(fallbackId);
@@ -174,7 +161,7 @@ function nbRenderCareLog(id){
   });
 }
 
-// ---------- Patient switcher ----------
+//  Patient switcher 
 const patientSelect = document.getElementById('patientSelect');
 
 if (patientSelect) {
@@ -196,7 +183,7 @@ if (patientSelect) {
   });
 }
 
-// Quick caretaker note: press Enter to add it to the active patient's Care Logs
+// Quick caretaker note
 const quickNoteInput = document.getElementById('quickNoteInput');
 
 if (quickNoteInput) {
@@ -214,7 +201,7 @@ if (quickNoteInput) {
   });
 }
 
-// ---------- Mobile nav toggle (hamburger) ----------
+// hamburger toggle
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 
@@ -226,7 +213,7 @@ if (navToggle && navLinks) {
   });
 }
 
-// ---------- Settings panel ----------
+//  Settings panel 
 const settingsBtn = document.getElementById('settingsBtn');
 const settingsPanel = document.getElementById('settingsPanel');
 const closeSettings = document.getElementById('closeSettings');
@@ -252,7 +239,7 @@ if (settingsBtn && settingsPanel) {
   });
 }
 
-// Notifications toggle -> show/hide the Alert pill for the active patient
+// Notifications toggle
 const notifToggle = document.getElementById('notifToggle');
 if (notifToggle) {
   notifToggle.addEventListener('change', () => {
@@ -260,9 +247,9 @@ if (notifToggle) {
   });
 }
 
-// Default text size buttons (Small / Medium / Large)
+// Default text size buttons 
 const textSizeBtns = document.querySelectorAll('#settingsTextSize button');
-const sizeMap = { small: 14, medium: 16, large: 19 };
+const sizeMap = { small: 9, medium: 16, large: 24 };
 textSizeBtns.forEach(btn => {
   btn.addEventListener('click', () => {
     textSizeBtns.forEach(b => b.classList.remove('active'));
@@ -272,12 +259,10 @@ textSizeBtns.forEach(btn => {
   });
 });
 
-// ============================================================
 // Manual location override from settings dropdown
 // Persists the saved-location list and the active pick in
 // localStorage so both survive a page refresh, instead of always
 // resetting to the three hardcoded defaults.
-// ============================================================
 const NB_LOCATION_KEY = 'neurobloom_locations';
 const NB_ACTIVE_LOCATION_KEY = 'neurobloom_active_location';
 const NB_DEFAULT_LOCATIONS = ['Guwahati, Assam', 'Jhansi, Uttar Pradesh', 'Delhi NCR'];
@@ -416,7 +401,7 @@ if (addLocationBtn && newLocationInput) {
   });
 }
 
-// Use My Live Location -> browser Geolocation API + reverse geocoding
+// Use My Live Location 
 const useLiveLocationBtn = document.getElementById('useLiveLocationBtn');
 const locationStatus = document.getElementById('locationStatus');
 
@@ -470,18 +455,7 @@ if (useLiveLocationBtn && locationValueEl) {
   });
 }
 
-// ============================================================
 // Translate feature
-// Wires the four language chips at the bottom (Assamese / English /
-// Manipuri / Mizo) to actually translate the patient-facing text on
-// screen. Uses the free MyMemory Translation API (no key required).
-// ============================================================
-
-// ISO codes MyMemory expects. Assamese and Bengali (used here as the
-// nearest supported code for Manipuri, which is often written in Bengali
-// script) work well. Mizo has very limited machine-translation support —
-// if the API can't handle it, we leave the original English text in place
-// rather than show garbled output.
 const NB_LANG_CODES = {
   'অসমীয়া': 'as',
   'English': 'en',
@@ -489,23 +463,20 @@ const NB_LANG_CODES = {
   'Mizo': 'lus'
 };
 
-// Containers whose text should NEVER be translated: the brand name, proper
-// nouns (patient dropdown, location values), raw timestamps, and the
-// language-picker buttons themselves (translating "English"/"Mizo" would be
-// confusing for the very control used to pick a language).
+// Containers whose text should NEVER be translated
 const NB_TRANSLATE_EXCLUDE_SELECTORS = [
-  '.brand',            // "NeuroBloom" / "COGNITIVE ASSISTANT"
-  '.lang-btns',        // the language chips
-  '#patientSelect',    // patient names
-  '#locationSelect',   // location dropdown values
+  '.brand',            
+  '.lang-btns',        
+  '#patientSelect',   
+  '#locationSelect',   
   '.settings-select',
   '#locationChipValue',
-  '#locationManageList', // saved-location chip list
-  '#newLocationInput',    // add-location input field
-  '#statusLastActive', // timestamp
-  '.s-time',           // schedule timestamps
-  '.text-size-btns',   // "A-" / "A+"
-  '#settingsTextSize'  // "A" size buttons
+  '#locationManageList', 
+  '#newLocationInput',    
+  '#statusLastActive', 
+  '.s-time',           
+  '.text-size-btns',   
+  '#settingsTextSize'  
 ];
 
 function nbShouldSkipTextNode(node){
@@ -516,16 +487,13 @@ function nbShouldSkipTextNode(node){
   if (!parent) return true;
   if (NB_TRANSLATE_EXCLUDE_SELECTORS.some(sel => parent.closest(sel))) return true;
 
-  // Skip strings with no actual letters (pure emoji/symbols/numbers/times),
-  // since there's nothing meaningful to translate.
+  // Skip strings 
   if (!/\p{L}/u.test(text)) return true;
 
   return false;
 }
 
-// Walks every text node inside the dashboard so newly rendered patient data
-// (schedule items, tags, meta text, care log entries, etc.) gets picked up
-// automatically — no need to hand-list every element.
+// Walks every text node inside the dashboard 
 function nbCollectTranslatableTextNodes(){
   const root = document.querySelector('.wrap');
   if (!root) return [];
@@ -558,8 +526,7 @@ async function nbTranslateText(text, langCode){
   }
 }
 
-// The quick-note input's placeholder is an attribute, not a text node, so it
-// needs its own pass.
+// The quick-note input placeholder
 async function nbTranslatePlaceholder(langCode){
   const input = document.getElementById('quickNoteInput');
   if (!input) return;
@@ -577,9 +544,6 @@ async function nbTranslatePage(langCode){
 
   const nodes = nbCollectTranslatableTextNodes();
 
-  // Cache each node's original English text once (as a plain JS property —
-  // text nodes don't have `dataset`), so we always translate from English
-  // rather than re-translating an already-translated string.
   nodes.forEach(node => {
     if (node.nbOriginal === undefined) node.nbOriginal = node.nodeValue;
   });
@@ -599,8 +563,6 @@ async function nbTranslatePage(langCode){
   ]);
 }
 
-// Re-applies the currently selected language after new content is rendered
-// (e.g. switching patients, the schedule refreshing, or a new care log entry).
 function nbApplyActiveTranslation(){
   if (nbActiveLang !== 'en') nbTranslatePage(nbActiveLang);
 }

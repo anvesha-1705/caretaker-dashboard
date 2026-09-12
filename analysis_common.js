@@ -1,7 +1,3 @@
-// Shared by analysis-memory.html / analysis-best.html / analysis-logic.html
-// Reads the active patient (from the URL, falling back to localStorage)
-// and personalizes the page title + meta line + back link.
-
 function nbInitAnalysisPage(opts) {
   const params = new URLSearchParams(window.location.search);
   const patientId = params.get('patient') || nbGetActivePatientId();

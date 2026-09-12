@@ -1,10 +1,3 @@
-// ============================================================
-// NeuroBloom dashboard — patient data store
-// Defines: nbGetPatients, nbGetPatient, nbGetActivePatientId,
-// nbSetActivePatientId, nbGetCareLog, nbAddCareLogEntry
-// Replace the placeholder values below with real patient data.
-// ============================================================
-
 const NB_PATIENTS = [
   {
     id: 'arundhati',
