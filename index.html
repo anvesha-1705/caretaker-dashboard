@@ -12,6 +12,7 @@
 <div class="wrap">
 <!-- Top nav -->
 <div class="topnav">
+<div class="topnav-row">
 <div class="brand">
 <div class="brand-mark">
 <svg viewBox="0 0 24 24" fill="none"><path d="M12 3c-2 2-3 4-3 6.5S10.5 14 12 14s3-2 3-4.5S14 5 12 3Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 14v7M9 21h6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
@@ -21,11 +22,15 @@
 <div class="sub">COGNITIVE ASSISTANT</div>
 </div>
 </div>
+<button class="nav-toggle" id="navToggle" aria-label="Toggle menu" aria-expanded="false" aria-controls="navLinks">
+<span></span><span></span><span></span>
+</button>
+</div>
 <div class="patient-switch">
 <span class="patient-switch-label">Caring for</span>
 <select id="patientSelect" class="patient-select"></select>
 </div>
-<div class="nav-links">
+<div class="nav-links" id="navLinks">
 <button class="nav-pill active">▦ Dashboard</button>
 <button class="nav-pill">▢ Games</button>
 <button class="nav-pill">↗ Progress</button>

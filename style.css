@@ -16,7 +16,7 @@
   --blue-tint:    #E7F0FA;
   --yellow:       #F4B942;
   --yellow-tint:  #FEF3DC;
-  --green:        #2E8B68;
+  --green:        #8FC1A6;
   --green-tint:   #E7F5EE;
   --purple:       #9C7AEA;
   --purple-tint:  #F1EBFC;
@@ -65,6 +65,8 @@ body {
 
 .brand { display: flex; align-items: center; gap: 12px; }
 
+.topnav-row { display: contents; }
+
 .brand-mark {
   width: 42px;
   height: 42px;
@@ -93,6 +95,28 @@ body {
 }
 
 .nav-links { display: flex; align-items: center; gap: 8px; position: relative; }
+
+.nav-toggle {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--line);
+  background: var(--cream-deep);
+  cursor: pointer;
+}
+.nav-toggle span {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: var(--teal-deep);
+}
+.nav-toggle:hover { background: var(--teal-tint); }
 
 .nav-pill {
   border: none;
@@ -606,9 +630,17 @@ body {
 
   /* Stack the top nav into rows instead of squeezing everything in one line */
   .topnav { flex-direction: column; align-items: stretch; gap: 14px; padding: 14px 16px; }
-  .brand { justify-content: center; min-width: 0; }
+  .brand { justify-content: flex-start; min-width: 0; }
   .patient-switch { justify-content: space-between; min-width: 0; }
   .patient-select { flex: 1; min-width: 0; }
+
+  /* Top row: NeuroBloom brand on the left, hamburger toggle on the right.
+     nav-links is hidden by default and only shown once the toggle is
+     opened via JS. */
+  .topnav-row { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+  .nav-toggle { display: flex; }
+  .nav-links { display: none; }
+  .nav-links.open { display: flex; }
 
   /* Nav pills stacked full-width — two-column grid overflowed on narrow
      screens because text like "Reminders" can't shrink below its content
